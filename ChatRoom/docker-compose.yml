@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  chat-room-server: 
+    container_name: chat-room-server
+    hostname: chat-room-server
+    restart: always
+    build: 
+      context: .
+      dockerfile: ./MqttBroker/Dockerfile
+    ports: 
+      - '1883:1883'
+    volumes:
+      - ~/.docker-volumns/ChatRoomServer/Logs:/app/Logs
+  chat-room-db:
+    container_name: chat-room-db
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=chat_room
+    ports:
+        - '5432:5432'
+    volumes:
+        - ~/.docker-volumns/ChatRoomDB:/var/lib/postgresql/data
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./Nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./Nginx/logs:/var/log/nginx
+    depends_on:
+      - chat-room-server
+      - chat-room-db
+
+        
