@@ -7,7 +7,7 @@ namespace ChatRoomModels
 	/// <summary>
 	/// 基底物件，所有Model都要繼承此物件
 	/// </summary>
-	public abstract class CharRoomObject
+	public abstract class ChatRoomObject
 	{
 		[Key]
 		[DatabaseGenerated( DatabaseGeneratedOption.Identity )]

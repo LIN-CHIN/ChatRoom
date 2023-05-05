@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace ChatRoomModels
 {
 	[Table( "users", Schema = "chat_room" )]
-	public class Users : CharRoomObject
+	public class Users : ChatRoomObject
 	{
 		/// <summary>
 		/// 使用者帳號
@@ -31,6 +31,14 @@ namespace ChatRoomModels
 		[Column( "pwd", TypeName = "varchar(50)" )]
 		[Comment( "密碼" )]
 		public string Pwd
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// 關聯Messages
+		/// </summary>
+		public ICollection<Messages> Messages
 		{
 			get; set;
 		}

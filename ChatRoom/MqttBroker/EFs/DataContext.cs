@@ -15,12 +15,19 @@ namespace MqttBroker.EFs
 		}
 
 		public DbSet<Users> Users => Set<Users>();
+		public DbSet<Messages> Messages => Set<Messages>();
 
 		protected override void OnModelCreating( ModelBuilder modelBuilder )
 		{
 			modelBuilder.Entity<Users>()
-				.HasIndex( c => new { c.UserId } )
+				.HasIndex( u => new { u.UserId } )
 				.IsUnique();
+
+			modelBuilder.Entity<Messages>()
+				.HasOne( m => m.Users )
+				.WithMany( m => m.Messages )
+				.IsRequired()
+				.OnDelete( DeleteBehavior.Restrict );
 
 			modelBuilder.Entity<Users>().HasData( GetDefaultUsers() );
 		}
