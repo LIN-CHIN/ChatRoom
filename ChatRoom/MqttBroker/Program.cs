@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,6 +10,7 @@ using MqttBroker.Handlers.Interfaces;
 using MqttBroker.Services;
 using MqttBroker.Services.Interfaces;
 using NLog;
+using System.Security.Cryptography.X509Certificates;
 
 var logger = LogManager.GetCurrentClassLogger();
 
@@ -24,8 +26,10 @@ try {
 	var host = Host.CreateDefaultBuilder( args )
 	.ConfigureServices( ( hostContext, services ) =>
 	{
+		//注入DataContext，並且將Entity Framework產生的 __EFMigrationsHistory 存放位置改為指定Schema
 		services.AddDbContext<DataContext>(
-			c => c.UseNpgsql( appSettings!.ConnectionString ) );
+			c => c.UseNpgsql( appSettings!.ConnectionString,
+							  x => x.MigrationsHistoryTable( HistoryRepository.DefaultTableName, "chat_room" ) ) );
 
 		services.AddSingleton<IWriteMessageHandler, WriteMessageHandler>()
 				.AddSingleton( appSettings! )
