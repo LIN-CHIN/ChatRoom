@@ -19,10 +19,7 @@ namespace ChatRoomModels
 		[Required]
 		[Column( "user_id", TypeName = "varchar(50)" )]
 		[Comment( "使用者帳號" )]
-		public string UserId
-		{
-			get; set;
-		}
+		public string UserId { get; set; }
 
 		/// <summary>
 		/// 使用者帳號
@@ -30,17 +27,11 @@ namespace ChatRoomModels
 		[Required]
 		[Column( "pwd", TypeName = "varchar(50)" )]
 		[Comment( "密碼" )]
-		public string Pwd
-		{
-			get; set;
-		}
+		public string Pwd { get; set; }
 
 		/// <summary>
 		/// 關聯Messages
 		/// </summary>
-		public ICollection<Messages> Messages
-		{
-			get; set;
-		}
+		public ICollection<Messages> Messages { get; set; }
 	}
 }

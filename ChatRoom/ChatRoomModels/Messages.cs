@@ -24,15 +24,16 @@ namespace ChatRoomModels
 		/// 主題
 		/// </summary>
 		[Required]
-		[Column( "message", TypeName = "varchar(255)" )]
+		[Column( "topic", TypeName = "varchar(255)" )]
 		[Comment( "主題" )]
 		public string Topic { get; set; }
 
 		/// <summary>
 		/// 使用者id
 		/// </summary>
+		[ForeignKey( "Users" )]
 		[Required]
-		[Column( "message")]
+		[Column( "user_id" )]
 		[Comment( "Users表的id" )]
 		public long UserId { get; set; }
 
