@@ -103,13 +103,8 @@ namespace MqttBroker.Services
 		private void InterceptMessage( MqttApplicationMessageInterceptorContext context )
 		{
 			//取得user的流水號
-			var id = context.SessionItems;
-			if(id == null )
-			{
-				_consoleWithLogHandler.WriteLog( "The user id is not exist", LogLevelEnum.Error );
-				throw new AggregateException($"The user id is not exist : {context.ClientId}");
-			}
-
+			var id = context.SessionItems["Id"];
+			
 			Messages message = new Messages()
 			{
 				Message = Encoding.UTF8.GetString( context.ApplicationMessage.Payload ),

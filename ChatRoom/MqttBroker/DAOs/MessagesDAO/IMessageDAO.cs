@@ -1,4 +1,4 @@
-﻿using ChatRoomModels;
+﻿using ChatRoomModels.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MqttBroker.DAOs.MessagesDAO
 {
-	public interface IMessageDAO
+    public interface IMessageDAO
 	{
 		/// <summary>
 		/// 新增訊息

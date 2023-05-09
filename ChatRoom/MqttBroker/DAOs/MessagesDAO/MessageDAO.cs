@@ -1,4 +1,4 @@
-﻿using ChatRoomModels;
+﻿using ChatRoomModels.DB;
 using MqttBroker.EFs;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MqttBroker.DAOs.MessagesDAO
 {
-	public class MessageDAO : IMessageDAO
+    public class MessageDAO : IMessageDAO
 	{
 		private readonly DataContext _dataContext;
 		public MessageDAO( DataContext dataContext )

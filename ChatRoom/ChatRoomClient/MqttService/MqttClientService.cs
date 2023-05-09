@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChatRoomClient.MqttService.Interfaces;
+using ChatRoomModels;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace ChatRoomClient.MqttService
 {
@@ -30,7 +32,7 @@ namespace ChatRoomClient.MqttService
 
 			//建立MQTT連線選項
 			var options = new MqttClientOptionsBuilder()
-				.WithTcpServer( "127.0.0.1", 8888 ) //指定MQTT broker的IP或網域名稱
+				.WithTcpServer( "127.0.0.1", 1883 ) //指定MQTT broker的IP或網域名稱
 				.WithCredentials( userId, userPwd )
 				.WithClientId( userId )
 				.Build();

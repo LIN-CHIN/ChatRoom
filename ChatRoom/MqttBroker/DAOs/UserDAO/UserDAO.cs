@@ -1,4 +1,4 @@
-﻿using ChatRoomModels;
+﻿using ChatRoomModels.DB;
 using MqttBroker.EFs;
 using System;
 using System.Collections.Generic;

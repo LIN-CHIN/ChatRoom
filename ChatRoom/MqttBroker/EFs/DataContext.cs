@@ -1,4 +1,4 @@
-﻿using ChatRoomModels;
+﻿using ChatRoomModels.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MqttBroker.EFs
 {
-	public class DataContext : DbContext
+    public class DataContext : DbContext
 	{
 		public DataContext( DbContextOptions<DataContext> options ) : base( options )
 		{
