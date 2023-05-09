@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MqttBroker;
+using MqttBroker.DAOs.MessagesDAO;
+using MqttBroker.DAOs.UserDAO;
 using MqttBroker.EFs;
 using MqttBroker.Handlers;
 using MqttBroker.Handlers.Interfaces;
@@ -34,7 +36,9 @@ try {
 		services.AddSingleton<IWriteMessageHandler, WriteMessageHandler>()
 				.AddSingleton( appSettings! )
 				.AddScoped<Application>()
-				.AddScoped<IMqttServerService, MqttServerService>();
+				.AddScoped<IMqttServerService, MqttServerService>()
+				.AddScoped<IUserDAO, UserDAO>()
+				.AddScoped<IMessageDAO, MessageDAO>();
 	} )
 	.Build();
 
