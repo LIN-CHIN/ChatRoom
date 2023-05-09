@@ -21,7 +21,7 @@ namespace MqttBroker.Handlers
 		}
 
 		///<inheritdoc/>
-		public void WriteConsoleWithLog( string message )
+		public void WriteConsoleWithInfoLog( string message )
 		{
 			_logger.LogInformation( message );
 			Console.WriteLine( message );

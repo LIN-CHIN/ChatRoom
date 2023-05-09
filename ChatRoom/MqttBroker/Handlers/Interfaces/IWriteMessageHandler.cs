@@ -16,7 +16,7 @@ namespace MqttBroker.Handlers.Interfaces
         /// 寫訊息至Console和Log
         /// </summary>
         /// <param name="message">要寫的訊息</param>
-        public void WriteConsoleWithLog(string message);
+        public void WriteConsoleWithInfoLog(string message);
 
         /// <summary>
         /// 寫Log
