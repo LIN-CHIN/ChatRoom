@@ -28,13 +28,13 @@ namespace MqttBroker
 		/// <returns></returns>
 		public async Task Start()
 		{
-			_consoleWithLogHandler.WriteConsoleWithInfoLog( "進入應用程式起始點: Start() " );
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( "Enter the application entry point : Start() " );
 			await StartMqttServer();
-			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server已啟動" );
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server has been started" );
 			_manualResetEvent.WaitOne();
 
 			_mqttServer.StopAsync().Wait();
-			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server已關閉 " );
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server has been closed " );
 		}
 
 		/// <summary>

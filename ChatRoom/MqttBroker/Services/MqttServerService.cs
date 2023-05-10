@@ -73,7 +73,7 @@ namespace MqttBroker.Services
 			}
 			else
 			{
-				_consoleWithLogHandler.WriteConsoleWithInfoLog( $"UserName: {context.Username} 嘗試登入失敗" );
+				_consoleWithLogHandler.WriteConsoleWithInfoLog( $"User '{context.Username}' login attempt failed" );
 				context.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
 			}
 		}
@@ -92,7 +92,7 @@ namespace MqttBroker.Services
 			_messageDAO.Insert( chatRoomPayload!.ToMessagesEntity(Convert.ToInt64(id)) );
 
 			_consoleWithLogHandler.WriteConsoleWithInfoLog(
-				$"Topic: {context.ApplicationMessage.Topic}, msg: {Encoding.UTF8.GetString( context.ApplicationMessage.Payload )}" );
+				$"Topic: {context.ApplicationMessage.Topic}, Message: {chatRoomPayload!.ToMessagesEntity(Convert.ToInt64(id))}" );
 
 		}
 
@@ -103,9 +103,14 @@ namespace MqttBroker.Services
 		private void OnApplicationMessageReceived( MqttApplicationMessageReceivedEventArgs args )
 		{
 			ChatRoomPayload chatRoomPayload = JsonConvert.DeserializeObject<ChatRoomPayload>( Encoding.UTF8.GetString( args.ApplicationMessage.Payload ) )!;
+
+			//加上ClientId 到payload中
 			chatRoomPayload.ClientId = args.ClientId;
+
+			//重新包裝payload
 			args.ApplicationMessage.Payload = Encoding.UTF8.GetBytes( chatRoomPayload.ToChatString() );
-			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Message received from client '{args.ClientId}': Topic={args.ApplicationMessage.Topic}, Payload={args.ApplicationMessage.Payload}" );
+
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId} publish message': Topic={args.ApplicationMessage.Topic}, Payload={chatRoomPayload.Message}" );
 		}
 
 		/// <summary>
