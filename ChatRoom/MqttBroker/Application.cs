@@ -19,10 +19,10 @@ namespace MqttBroker
 		/// 應用程式起始點
 		/// </summary>
 		/// <returns></returns>
-		public async Task Start()
+		public void Start()
 		{
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( "Enter the application entry point : Start() " );
-			 await _mqttServerService.StartMqttServer();
+			 _mqttServerService.StartMqttServer();
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server has been started" );
 
 			//讓應用程式暫停執行

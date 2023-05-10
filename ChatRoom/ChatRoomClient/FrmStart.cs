@@ -148,7 +148,10 @@ namespace ChatRoom
 			}
 
 			FrmChatRoom frmChatRoom = new FrmChatRoom( _mqttClientService, _mqttClient, topic, tbUserName.Text );
-			frmChatRoom.ShowDialog();
+			if( frmChatRoom.ShowDialog() == DialogResult.Cancel ) 
+			{
+				_mqttClientService.UnSubscribe( _mqttClient, topic );
+			}
 		}
 	}
 }

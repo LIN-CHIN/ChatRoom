@@ -47,8 +47,7 @@ try {
 				.AddScoped<Application>()
 				.AddScoped<IMqttServerService, MqttServerService>()
 				.AddScoped<IUserDAO, UserDAO>()
-				.AddScoped<IMessageDAO, MessageDAO>()
-				.AddScoped<IMqttServerEvent, MqttServerEvent>();
+				.AddScoped<IMessageDAO, MessageDAO>();
 	} )
 	.Build();
 
@@ -61,7 +60,7 @@ try {
 	}
 
 	//程式進入點
-	await host.Services.GetService<Application>()!.Start();
+	host.Services.GetService<Application>()!.Start();
 
 }
 catch( Exception ex ) {

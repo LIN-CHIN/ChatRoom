@@ -13,7 +13,6 @@ namespace MqttBroker.Services.Interfaces
         /// 開啟Mqtt連線
         /// </summary>
         /// <returns></returns>
-        Task<IMqttServer> StartMqttServer();
-
-    }
+        void StartMqttServer();
+	}
 }

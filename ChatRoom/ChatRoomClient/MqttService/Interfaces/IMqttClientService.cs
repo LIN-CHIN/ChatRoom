@@ -39,14 +39,20 @@ namespace ChatRoomClient.MqttService.Interfaces
         /// <summary>
         /// 發布訊息
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="topic"></param>
+        /// <param name="message">要發布的訊息</param>
+        /// <param name="topic">主題</param>
         void Publish(IMqttClient mqttClient, string message, string topic);
 
-        /// <summary>
-        /// 訂閱
-        /// </summary>
-        /// <param name="topic"></param>
-        void Subscribe(IMqttClient mqttClient, string topic);
-    }
+		/// <summary>
+		/// 訂閱
+		/// </summary>
+		/// <param name="topic">要訂閱的主題</param>
+		void Subscribe(IMqttClient mqttClient, string topic);
+
+		/// <summary>
+		/// 取消訂閱
+		/// </summary>
+		/// <param name="topic">要取消訂閱的主題</param>
+		void UnSubscribe( IMqttClient mqttClient, string topic );
+	}
 }

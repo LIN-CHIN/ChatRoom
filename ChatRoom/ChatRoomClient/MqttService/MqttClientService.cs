@@ -7,6 +7,7 @@ using MQTTnet;
 using ChatRoomClient.MqttService.Interfaces;
 using ChatRoomModels;
 using Newtonsoft.Json;
+using MQTTnet.Client.Unsubscribing;
 
 namespace ChatRoomClient.MqttService
 {
@@ -86,6 +87,15 @@ namespace ChatRoomClient.MqttService
 			mqttClient.SubscribeAsync(
 				new MqttTopicFilterBuilder()
 					.WithTopic( topic )
+					.Build() );
+		}
+
+		///<inheritdoc/>
+		public void UnSubscribe( IMqttClient mqttClient, string topic )
+		{
+			mqttClient.UnsubscribeAsync(
+				new MqttClientUnsubscribeOptionsBuilder()
+					.WithTopicFilter( topic )
 					.Build() );
 		}
 	}
