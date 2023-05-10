@@ -47,8 +47,10 @@
 			// rtbMessage
 			// 
 			rtbMessage.Dock =  DockStyle.Fill ;
+			rtbMessage.Enabled =  false ;
 			rtbMessage.Location =  new Point( 3, 3 ) ;
 			rtbMessage.Name =  "rtbMessage" ;
+			rtbMessage.ReadOnly =  true ;
 			rtbMessage.Size =  new Size( 945, 557 ) ;
 			rtbMessage.TabIndex =  6 ;
 			rtbMessage.Text =  "" ;

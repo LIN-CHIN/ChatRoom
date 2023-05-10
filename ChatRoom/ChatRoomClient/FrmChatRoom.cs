@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace ChatRoom
 {
-    public partial class FrmChatRoom : Form
+	public partial class FrmChatRoom : Form
 	{
 		private string _topic = "";
 		private IMqttClientService _mqttClientService;
@@ -58,6 +58,8 @@ namespace ChatRoom
 		{
 			string message = tbInput.Text;
 			_mqttClientService.Publish( _mqttClient, message, _topic );
+
+			tbInput.Text = "";
 		}
 	}
 }
