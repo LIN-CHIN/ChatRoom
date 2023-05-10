@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!-- XSD manual extracted from package NLog.Schema: https://www.nuget.org/packages/NLog.Schema-->
-<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd" xsi:schemaLocation="NLog NLog.xsd"
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       autoReload="true"
       internalLogFile="c:\temp\console-example-internal.log"
@@ -12,16 +12,21 @@
 		<target xsi:type="File"
 				name="errorLog"
 				fileName="${basedir}/Logs/Error/${shortdate}.log"
-				layout="${longdate}|${level}|${message}|${all-event-properties} ${exception:format=tostring}" />
+				layout="${longdate}|${message} ${exception:format=tostring}|${callsite}" />
 
 		<target xsi:type="File"
 				name="infoLog"
 				fileName="${basedir}/Logs/Info/${shortdate}.log"
-				layout="${longdate}|${level}|${message}|${all-event-properties} ${exception:format=tostring}" />
+				layout="${longdate}|${message} ${exception:format=tostring}" />
 	</targets>
 
 	<!-- rules to map from logger name to target -->
 	<rules>
+		
+		<logger name="Microsoft.EntityFrameworkCore.*" minlevel="trace" maxlevel="info" final="true"/>
+		<logger name="Microsoft.AspnetCore.*" minlevel="trace" maxlevel="info" final="true"/>
+		<logger name="Microsoft.Extensions.*" minlevel="trace" maxlevel="debug" final="true"/>
+		
 		<logger name="*"  minlevel="Error"  writeTo="errorLog" />
 		<logger name="*" minlevel="Info" writeTo="infoLog" />
 	</rules>

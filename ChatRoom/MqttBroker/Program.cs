@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using MqttBroker;
 using MqttBroker.DAOs.MessagesDAO;
 using MqttBroker.DAOs.UserDAO;
@@ -12,6 +13,7 @@ using MqttBroker.Handlers.Interfaces;
 using MqttBroker.Services;
 using MqttBroker.Services.Interfaces;
 using NLog;
+using NLog.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
 
 var logger = LogManager.GetCurrentClassLogger();
@@ -32,6 +34,14 @@ try {
 		services.AddDbContext<DataContext>(
 			c => c.UseNpgsql( appSettings!.ConnectionString,
 							  x => x.MigrationsHistoryTable( HistoryRepository.DefaultTableName, "chat_room" ) ) );
+
+		//設定nlog 
+		services.AddLogging( x =>
+		{
+			x.ClearProviders();
+			x.SetMinimumLevel( Microsoft.Extensions.Logging.LogLevel.Trace );
+			x.AddNLog( "./NLog.xml" );
+		} );
 
 		services.AddSingleton<IWriteMessageHandler, WriteMessageHandler>()
 				.AddSingleton( appSettings! )
