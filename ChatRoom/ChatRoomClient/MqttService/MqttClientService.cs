@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using ChatRoomClient.MqttService.Interfaces;
 using ChatRoomModels;
 using Microsoft.VisualBasic.ApplicationServices;
+using ChatRoomModels.DB;
+using Newtonsoft.Json;
 
 namespace ChatRoomClient.MqttService
 {
@@ -69,9 +71,15 @@ namespace ChatRoomClient.MqttService
 		///<inheritdoc/>
 		public void Publish( IMqttClient mqttClient, string message, string topic )
 		{
+			ChatRoomPayload chatRoomPayload = new ChatRoomPayload()
+			{
+				Topic = topic,
+				Message = message
+			};
+
 			mqttClient.PublishAsync( new MqttApplicationMessageBuilder()
 					  .WithTopic( topic )
-					  .WithPayload( Encoding.UTF8.GetBytes( message ) )
+					  .WithPayload( JsonConvert.SerializeObject( chatRoomPayload ) )
 					  .WithQualityOfServiceLevel( MqttQualityOfServiceLevel.AtLeastOnce )
 					  .Build() );
 		}

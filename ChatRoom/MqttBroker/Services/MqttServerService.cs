@@ -8,10 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using MqttBroker.Handlers.Interfaces;
 using MqttBroker.Services.Interfaces;
-using ChatRoomModels;
 using MqttBroker.DAOs.UserDAO;
 using MqttBroker.DAOs.MessagesDAO;
 using MqttBroker.Enums;
+using ChatRoomModels.DB;
+using ChatRoomModels;
+using Newtonsoft.Json;
 
 namespace MqttBroker.Services
 {
@@ -43,31 +45,11 @@ namespace MqttBroker.Services
 
 			mqttServer = new MqttFactory().CreateMqttServer();
 
-			mqttServer.UseClientConnectedHandler( e =>
-			{
-				_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{e.ClientId}' connected." );
-
-			mqttServer.UseClientDisconnectedHandler( e =>
-			{
-				_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{e.ClientId}' disconnected." );
-
-			} );
-			} );
-
-			mqttServer.UseApplicationMessageReceivedHandler( e =>
-			{
-				_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Message received from client '{e.ClientId}': Topic={e.ApplicationMessage.Topic}, Payload={e.ApplicationMessage.Payload}" );
-			} );
-
-			mqttServer.ClientSubscribedTopicHandler = new MqttServerClientSubscribedHandlerDelegate( e =>
-			{
-				_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{e.ClientId}' subscribed to topic '{e.TopicFilter.Topic}' with QoS {e.TopicFilter.QualityOfServiceLevel}." );
-			} );
-
-			mqttServer.ClientUnsubscribedTopicHandler = new MqttServerClientUnsubscribedTopicHandlerDelegate( e =>
-			{
-				_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{e.ClientId}' unsubscribed from topic '{e.TopicFilter}'" );
-			} );
+			mqttServer.UseClientConnectedHandler( OnClientConnected );
+			mqttServer.UseClientDisconnectedHandler( OnClientDisconnected );
+			mqttServer.UseApplicationMessageReceivedHandler( OnApplicationMessageReceived );
+			mqttServer.ClientSubscribedTopicHandler = new MqttServerClientSubscribedTopicHandlerDelegate(OnClientSubscribed);
+			mqttServer.ClientUnsubscribedTopicHandler = new MqttServerClientUnsubscribedTopicHandlerDelegate( OnClientUnsubscribed );
 
 			await mqttServer.StartAsync( options );
 
@@ -104,19 +86,63 @@ namespace MqttBroker.Services
 		{
 			//取得user的流水號
 			var id = context.SessionItems["Id"];
-			
-			Messages message = new Messages()
-			{
-				Message = Encoding.UTF8.GetString( context.ApplicationMessage.Payload ),
-				Topic = context.ApplicationMessage.Topic,
-				UserId = Convert.ToInt64( id )
-			};
-			
-			_messageDAO.Insert( message );
+
+			var chatRoomPayload = JsonConvert.DeserializeObject<ChatRoomPayload>( Encoding.UTF8.GetString(context.ApplicationMessage.Payload) );
+
+			_messageDAO.Insert( chatRoomPayload!.ToMessagesEntity(Convert.ToInt64(id)) );
 
 			_consoleWithLogHandler.WriteConsoleWithInfoLog(
 				$"Topic: {context.ApplicationMessage.Topic}, msg: {Encoding.UTF8.GetString( context.ApplicationMessage.Payload )}" );
 
+		}
+
+		/// <summary>
+		/// 接收訊息事件
+		/// </summary>
+		/// <param name="args"></param>
+		private void OnApplicationMessageReceived( MqttApplicationMessageReceivedEventArgs args )
+		{
+			ChatRoomPayload chatRoomPayload = JsonConvert.DeserializeObject<ChatRoomPayload>( Encoding.UTF8.GetString( args.ApplicationMessage.Payload ) )!;
+			chatRoomPayload.ClientId = args.ClientId;
+			args.ApplicationMessage.Payload = Encoding.UTF8.GetBytes( chatRoomPayload.ToChatString() );
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Message received from client '{args.ClientId}': Topic={args.ApplicationMessage.Topic}, Payload={args.ApplicationMessage.Payload}" );
+		}
+
+		/// <summary>
+		/// 客戶端連線後的事件
+		/// </summary>
+		/// <param name="args"></param>
+		private void OnClientConnected( MqttServerClientConnectedEventArgs args )
+		{
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' connected." );
+		}
+
+		/// <summary>
+		/// 客戶端離線後的事件
+		/// </summary>
+		/// <param name="args"></param>
+		private void OnClientDisconnected( MqttServerClientDisconnectedEventArgs args )
+		{
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' disconnected." );
+		}
+
+
+		/// <summary>
+		/// 客戶訂閱事件
+		/// </summary>
+		/// <param name="args"></param>
+		private void OnClientSubscribed( MqttServerClientSubscribedTopicEventArgs args)
+		{
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' subscribed to topic '{args.TopicFilter.Topic}' with QoS {args.TopicFilter.QualityOfServiceLevel}." );
+		}
+
+		/// <summary>
+		/// 客戶取消訂閱事件
+		/// </summary>
+		/// <param name="args"></param>
+		private void OnClientUnsubscribed( MqttServerClientUnsubscribedTopicEventArgs args )
+		{
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' unsubscribed from topic '{args.TopicFilter}'" );
 		}
 	}
 }

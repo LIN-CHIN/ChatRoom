@@ -22,15 +22,19 @@ namespace MqttBroker
 			_consoleWithLogHandler = consoleWithLogHandler;
 		}
 
+		/// <summary>
+		/// 應用程式起始點
+		/// </summary>
+		/// <returns></returns>
 		public async Task Start()
 		{
-			_consoleWithLogHandler.WriteConsoleWithInfoLog( "Run application Start() " );
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( "進入應用程式起始點: Start() " );
 			await StartMqttServer();
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server已啟動" );
 			_manualResetEvent.WaitOne();
 
-			_consoleWithLogHandler.WriteConsoleWithInfoLog( "The MQTT Server has been shut down. " );
 			_mqttServer.StopAsync().Wait();
+			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server已關閉 " );
 		}
 
 		/// <summary>
