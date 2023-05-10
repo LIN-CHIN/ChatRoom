@@ -14,7 +14,6 @@ using MqttBroker.Services;
 using MqttBroker.Services.Interfaces;
 using NLog;
 using NLog.Extensions.Logging;
-using System.Security.Cryptography.X509Certificates;
 
 var logger = LogManager.GetCurrentClassLogger();
 

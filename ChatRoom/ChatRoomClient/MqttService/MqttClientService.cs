@@ -4,15 +4,8 @@ using MQTTnet.Client.Options;
 using MQTTnet.Client;
 using MQTTnet.Protocol;
 using MQTTnet;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChatRoomClient.MqttService.Interfaces;
 using ChatRoomModels;
-using Microsoft.VisualBasic.ApplicationServices;
-using ChatRoomModels.DB;
 using Newtonsoft.Json;
 
 namespace ChatRoomClient.MqttService
