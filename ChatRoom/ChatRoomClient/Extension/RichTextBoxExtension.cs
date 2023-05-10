@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ChatRoomClient.Extension
 {
+	/// <summary>
+	/// RichTextBox 擴充
+	/// </summary>
 	public static class RichTextBoxExtension
 	{
 		/// <summary>

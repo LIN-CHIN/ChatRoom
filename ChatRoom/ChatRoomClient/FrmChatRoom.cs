@@ -19,7 +19,17 @@ namespace ChatRoom
 		private IMqttClientService _mqttClientService;
 		private IMqttClient _mqttClient;
 
-		public FrmChatRoom( IMqttClientService mqttClientService, IMqttClient mqttClient, string topic )
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="mqttClientService"></param>
+		/// <param name="mqttClient"></param>
+		/// <param name="topic">主題</param>
+		/// <param name="userName">使用者名稱(ClientId)</param>
+		public FrmChatRoom( IMqttClientService mqttClientService,
+							IMqttClient mqttClient,
+							string topic,
+							string userName )
 		{
 			//init 
 			InitializeComponent();
@@ -28,13 +38,13 @@ namespace ChatRoom
 			_mqttClient = mqttClient;
 			_topic = topic;
 
-			JoinTopic();
+			JoinTopic( userName );
 		}
 
 		/// <summary>
 		/// 進入聊天室的動作
 		/// </summary>
-		private void JoinTopic()
+		private void JoinTopic(string userName)
 		{
 			//訂閱主題
 			_mqttClientService.Subscribe( _mqttClient, _topic );
@@ -44,7 +54,6 @@ namespace ChatRoom
 			{
 				rtbMessage.SendMessage( Encoding.UTF8.GetString( e.ApplicationMessage.Payload ) );
 			} );
-
 
 			rtbMessage.SendMessage( $"進入房間: {_topic}" );
 		}

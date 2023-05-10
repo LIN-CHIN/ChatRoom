@@ -49,6 +49,7 @@
 			label3 =  new Label() ;
 			panel9 =  new Panel() ;
 			label4 =  new Label() ;
+			btnTopic2 =  new Button() ;
 			tableLayoutPanel1.SuspendLayout();
 			panel4.SuspendLayout();
 			panel3.SuspendLayout();
@@ -217,6 +218,7 @@
 			// panel2
 			// 
 			tableLayoutPanel1.SetColumnSpan( panel2, 2 );
+			panel2.Controls.Add( btnTopic2 );
 			panel2.Controls.Add( btnTopic1 );
 			panel2.Dock =  DockStyle.Fill ;
 			panel2.Location =  new Point( 110, 202 ) ;
@@ -289,6 +291,16 @@
 			label4.TabIndex =  0 ;
 			label4.Text =  "視窗：" ;
 			// 
+			// btnTopic2
+			// 
+			btnTopic2.Location =  new Point( 144, 16 ) ;
+			btnTopic2.Name =  "btnTopic2" ;
+			btnTopic2.Size =  new Size( 118, 42 ) ;
+			btnTopic2.TabIndex =  7 ;
+			btnTopic2.Text =  "主題二" ;
+			btnTopic2.UseVisualStyleBackColor =  true ;
+			btnTopic2.Click +=  btnTopic2_Click ;
+			// 
 			// FrmStart
 			// 
 			AutoScaleDimensions =  new SizeF( 9F, 19F ) ;
@@ -338,5 +350,6 @@
 		private Panel panel2;
 		private Panel panel8;
 		private Panel panel9;
+		private Button btnTopic2;
 	}
 }

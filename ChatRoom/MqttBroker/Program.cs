@@ -48,7 +48,8 @@ try {
 				.AddScoped<Application>()
 				.AddScoped<IMqttServerService, MqttServerService>()
 				.AddScoped<IUserDAO, UserDAO>()
-				.AddScoped<IMessageDAO, MessageDAO>();
+				.AddScoped<IMessageDAO, MessageDAO>()
+				.AddScoped<IMqttServerEvent, MqttServerEvent>();
 	} )
 	.Build();
 

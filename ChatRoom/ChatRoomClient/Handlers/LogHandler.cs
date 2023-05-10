@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ChatRoomClient.Handlers
 {
+	/// <summary>
+	/// Logger 
+	/// </summary>
 	public class LogHandler : ILogHandler
 	{
 		public readonly ILogger<LogHandler> _logger;

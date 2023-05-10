@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChatRoomClient.Handlers.Interfaces
 {
+	/// <summary>
+	/// Logger Interface
+	/// </summary>
 	public interface ILogHandler
 	{
 		/// <summary>

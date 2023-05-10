@@ -17,6 +17,9 @@ using Newtonsoft.Json;
 
 namespace ChatRoomClient.MqttService
 {
+	/// <summary>
+	/// MQTT Client 的 Service
+	/// </summary>
     public class MqttClientService : IMqttClientService
 	{
 
@@ -26,7 +29,7 @@ namespace ChatRoomClient.MqttService
 														Action<MqttClientConnectedEventArgs> onConnectedHandler,
 														Action<MqttClientDisconnectedEventArgs> onDisConnctedHandler )
 		{
-			IMqttClient mqttClient = null;
+			IMqttClient mqttClient ;
 
 			//建立MQTT client
 			var factory = new MqttFactory();

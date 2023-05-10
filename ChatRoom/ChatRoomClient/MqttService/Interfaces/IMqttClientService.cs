@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace ChatRoomClient.MqttService.Interfaces
 {
+    /// <summary>
+    /// MQTT Client 的 Service Interface
+    /// </summary>
     public interface IMqttClientService
     {
         /// <summary>

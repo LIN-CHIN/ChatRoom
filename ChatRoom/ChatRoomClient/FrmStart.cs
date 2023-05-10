@@ -17,10 +17,10 @@ using ChatRoomClient.MqttService.Interfaces;
 
 namespace ChatRoom
 {
-    public partial class FrmStart : Form
+	public partial class FrmStart : Form
 	{
 		private readonly ILogHandler _logHandler;
-			
+
 		IMqttClient _mqttClient;
 		IMqttClientService _mqttClientService;
 
@@ -58,7 +58,7 @@ namespace ChatRoom
 			if( rdoTCP.Checked ) {
 				await Connection();
 			}
-			else{
+			else {
 				//TODO: By WS Connection
 			}
 		}
@@ -71,8 +71,7 @@ namespace ChatRoom
 		private void btnDisconnection_Click( object sender, EventArgs e )
 		{
 			if( !_mqttClientService.IsConnection( _mqttClient ) ) {
-
-				rtbMessage.SendMessage( $"使用者:{tbUserName.Text} 並非連線狀態 " );
+				rtbMessage.SendMessage( $"使用者 '{tbUserName.Text}' 並不是連線狀態" );
 				return;
 			}
 
@@ -86,14 +85,17 @@ namespace ChatRoom
 		/// <param name="e"></param>
 		private void btnTopic1_Click( object sender, EventArgs e )
 		{
-			const string TOPIC = "主題一";
-			if( !_mqttClientService.IsConnection( _mqttClient ) ) {
-				rtbMessage.SendMessage( "請先進行連線" );
-				return;
-			}
+			OpenChatRoomForm( "主題一" );
+		}
 
-			FrmChatRoom frmChatRoom = new FrmChatRoom( _mqttClientService, _mqttClient, TOPIC );
-			frmChatRoom.ShowDialog();
+		/// <summary>
+		/// 訂閱主題二
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void btnTopic2_Click( object sender, EventArgs e )
+		{
+			OpenChatRoomForm( "主題二" );
 		}
 
 		private void OnConnectedHandler( MqttClientConnectedEventArgs args )
@@ -108,6 +110,10 @@ namespace ChatRoom
 			}
 		}
 
+		/// <summary>
+		/// Client連線
+		/// </summary>
+		/// <returns></returns>
 		private async Task Connection()
 		{
 			try {
@@ -121,18 +127,35 @@ namespace ChatRoom
 			}
 			catch( MqttConnectingFailedException ex ) {
 				rtbMessage.SendMessageWithLog( "使用者帳號或密碼錯誤", LogLevelEnum.Info );
+
 			}
 			catch( Exception ex ) {
 				if( ex.InnerException != null ) {
 					if( ( (SocketException)ex.InnerException ).ErrorCode == 10061 ) {
-						rtbMessage.SendMessageWithLog( "連線不到Server ，請洽管理員", LogLevelEnum.Info );
+						rtbMessage.SendMessageWithLog( $"連線不到Server，請洽管理員。", LogLevelEnum.Error );
+						_logHandler.WriteError( ex.ToString() );
+						return;
 					}
 				}
 
 				rtbMessage.SendMessage( "連線時發生異常，請洽管理員" );
-				_logHandler.WriteError( $"連線時發生異常: {ex}" );
+				_logHandler.WriteError( $"連線時發生異常。 Exception : {ex}" );
 			}
 		}
 
+		/// <summary>
+		/// 開啟聊天室視窗
+		/// </summary>
+		/// <param name="topic">主題</param>
+		private void OpenChatRoomForm(string topic)
+		{
+			if( !_mqttClientService.IsConnection( _mqttClient ) ) {
+				rtbMessage.SendMessage( "請先進行連線" );
+				return;
+			}
+
+			FrmChatRoom frmChatRoom = new FrmChatRoom( _mqttClientService, _mqttClient, topic, tbUserName.Text );
+			frmChatRoom.ShowDialog();
+		}
 	}
 }

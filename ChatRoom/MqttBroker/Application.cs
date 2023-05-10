@@ -13,7 +13,6 @@ namespace MqttBroker
 	{
 		private readonly IWriteMessageHandler _consoleWithLogHandler;
 		private static ManualResetEvent _manualResetEvent = new ManualResetEvent( false );
-		IMqttServer _mqttServer;
 		IMqttServerService _mqttServerService;
 
 		public Application( IMqttServerService mqttServerService, IWriteMessageHandler consoleWithLogHandler )
@@ -29,21 +28,12 @@ namespace MqttBroker
 		public async Task Start()
 		{
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( "Enter the application entry point : Start() " );
-			await StartMqttServer();
+			 await _mqttServerService.StartMqttServer();
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server has been started" );
+
+			//讓應用程式暫停執行
 			_manualResetEvent.WaitOne();
-
-			_mqttServer.StopAsync().Wait();
-			_consoleWithLogHandler.WriteConsoleWithInfoLog( "MQTT server has been closed " );
 		}
 
-		/// <summary>
-		/// 開啟Mqtt連線
-		/// </summary>
-		/// <returns></returns>
-		public async Task StartMqttServer()
-		{
-			_mqttServer = await _mqttServerService.StartMqttServer();
-		}
 	}
 }
