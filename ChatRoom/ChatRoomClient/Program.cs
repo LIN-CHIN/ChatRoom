@@ -7,6 +7,8 @@ using NLog;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using ChatRoomClient.MqttService.Interfaces;
+using Microsoft.Extensions.Configuration;
+using ChatRoomClient.Settings;
 
 namespace ChatRoomClient
 {
@@ -21,20 +23,28 @@ namespace ChatRoomClient
 			var logger = LogManager.GetCurrentClassLogger();
 
 			try {
+                var config = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+
+                var mqttBrokerInfo = config.GetSection("MqttBrokerInfo")
+                    .Get<MqttBrokerInfo>(opt => opt.BindNonPublicProperties = true);
+
 				var serviceProvider = new ServiceCollection()
-							 .AddLogging( x =>
+							 .AddLogging(x =>
 							 {
 								 // configure Logging with NLog
 								 x.ClearProviders();
-								 x.SetMinimumLevel( Microsoft.Extensions.Logging.LogLevel.Trace );
-								 x.AddNLog( "./NLog.xml" );
-							 } )
+								 x.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+								 x.AddNLog("./NLog.xml");
+							 })
 							 .AddSingleton<ILogHandler, LogHandler>()
+							 .AddSingleton(mqttBrokerInfo!)
 							 .AddScoped<FrmStart>()
 							 .AddScoped<IMqttClientService, MqttClientService>()
 							 .BuildServiceProvider();
 
-				ApplicationConfiguration.Initialize();
+                ApplicationConfiguration.Initialize();
 				Application.Run( serviceProvider.GetService<FrmStart>() );
 			}
 			catch( Exception ex ) {

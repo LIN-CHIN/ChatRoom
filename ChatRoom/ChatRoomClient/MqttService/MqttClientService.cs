@@ -8,6 +8,7 @@ using ChatRoomClient.MqttService.Interfaces;
 using ChatRoomModels;
 using Newtonsoft.Json;
 using MQTTnet.Client.Unsubscribing;
+using ChatRoomClient.Settings;
 
 namespace ChatRoomClient.MqttService
 {
@@ -16,6 +17,16 @@ namespace ChatRoomClient.MqttService
 	/// </summary>
     public class MqttClientService : IMqttClientService
 	{
+		private readonly MqttBrokerInfo _mqttBrokerInfo;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="mqttBrokerInfo"></param>
+        public MqttClientService(MqttBrokerInfo mqttBrokerInfo) 
+		{
+            _mqttBrokerInfo = mqttBrokerInfo;
+		}
 
 		///<inheritdoc/>
 		public async Task<IMqttClient> CreateMqttClient( string userId,
@@ -31,7 +42,8 @@ namespace ChatRoomClient.MqttService
 
 			//建立MQTT連線選項
 			var options = new MqttClientOptionsBuilder()
-				.WithTcpServer( "127.0.0.1", 1883 ) //指定MQTT broker的IP或網域名稱
+				.WithTcpServer(_mqttBrokerInfo.Host,
+                    _mqttBrokerInfo.Port ) //指定MQTT broker的IP或網域名稱
 				.WithCredentials( userId, userPwd )
 				.WithClientId( userId )
 				.Build();

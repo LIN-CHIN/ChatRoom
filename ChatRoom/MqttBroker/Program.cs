@@ -20,11 +20,13 @@ var logger = LogManager.GetCurrentClassLogger();
 try {
 	//註冊appsettings.json
 	var config = new ConfigurationBuilder()
-					.AddJsonFile( "./appsettings.json" )
+					.AddJsonFile("appsettings.json")
+					.AddEnvironmentVariables()
 					.Build();
 
 	var appSettings = config.GetSection( "AppSettings" ).Get<AppSettings>( c => c.BindNonPublicProperties = true );
 
+	Console.WriteLine($"appSettings: {appSettings.ConnectionString}");
 	//Host設定
 	var host = Host.CreateDefaultBuilder( args )
 	.ConfigureServices( ( hostContext, services ) =>

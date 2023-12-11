@@ -9,7 +9,7 @@
 		/// DB連線字串
 		/// </summary>
 		public string ConnectionString
-		{
+        {
 			get; private set;
 		}
 	}
