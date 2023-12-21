@@ -42,7 +42,28 @@ namespace MqttBroker.EFs
 				Pwd = "1234"
 			} );
 
-			return users;
+            users.Add(new Users
+            {
+                Id = 2,
+                UserId = "user1",
+                Pwd = "1234"
+            });
+
+            users.Add(new Users
+            {
+                Id = 3,
+                UserId = "user2",
+                Pwd = "1234"
+            });
+
+            users.Add(new Users
+            {
+                Id = 4,
+                UserId = "user3",
+                Pwd = "1234"
+            });
+
+            return users;
 		}
 	}
 }
