@@ -13,9 +13,12 @@ using System.Text;
 
 namespace MqttBroker.Services
 {
+	/// <summary>
+	/// MQTT Server 的 Service
+	/// </summary>
     public class MqttServerService : IMqttServerService
 	{
-		IMqttServer mqttServer;
+		private IMqttServer _mqttServer;
 		private readonly IWriteMessageHandler _consoleWithLogHandler;
 		private readonly IUserDAO _userDAO;
 		private readonly IMessageDAO _messageDAO;
@@ -45,15 +48,15 @@ namespace MqttBroker.Services
 				.WithApplicationMessageInterceptor( InterceptMessage )
 				.Build();
 
-			mqttServer = new MqttFactory().CreateMqttServer();
+			_mqttServer = new MqttFactory().CreateMqttServer();
 
-			mqttServer.UseClientConnectedHandler( OnClientConnected );
-			mqttServer.UseClientDisconnectedHandler( OnClientDisconnected );
-			mqttServer.UseApplicationMessageReceivedHandler( OnApplicationMessageReceived );
-			mqttServer.ClientSubscribedTopicHandler = new MqttServerClientSubscribedTopicHandlerDelegate( OnClientSubscribed );
-			mqttServer.ClientUnsubscribedTopicHandler = new MqttServerClientUnsubscribedTopicHandlerDelegate( OnClientUnsubscribed );
+			_mqttServer.UseClientConnectedHandler( OnClientConnected );
+			_mqttServer.UseClientDisconnectedHandler( OnClientDisconnected );
+			_mqttServer.UseApplicationMessageReceivedHandler( OnApplicationMessageReceived );
+			_mqttServer.ClientSubscribedTopicHandler = new MqttServerClientSubscribedTopicHandlerDelegate( OnClientSubscribed );
+			_mqttServer.ClientUnsubscribedTopicHandler = new MqttServerClientUnsubscribedTopicHandlerDelegate( OnClientUnsubscribed );
 
-			mqttServer.StartAsync( options );
+			_mqttServer.StartAsync( options );
 
 		}
 
@@ -79,14 +82,14 @@ namespace MqttBroker.Services
 							.Build();
 
 
-			mqttServer.PublishAsync( message );
+			_mqttServer.PublishAsync( message );
 		}
 
 		/// <summary>
 		/// 驗證連線
 		/// </summary>
 		/// <param name="context"></param>
-		public void VerifyConnection( MqttConnectionValidatorContext context )
+		private void VerifyConnection( MqttConnectionValidatorContext context )
 		{
 			Users? user = _userDAO.Get( context.Username );
 
@@ -106,7 +109,7 @@ namespace MqttBroker.Services
 		/// 攔截訊息
 		/// </summary>
 		/// <param name="context"></param>
-		public void InterceptMessage( MqttApplicationMessageInterceptorContext context )
+		private void InterceptMessage( MqttApplicationMessageInterceptorContext context )
 		{
 			var chatRoomPayload = JsonConvert.DeserializeObject<ChatRoomPayload>( Encoding.UTF8.GetString( context.ApplicationMessage.Payload ) );
 
@@ -127,7 +130,7 @@ namespace MqttBroker.Services
 		/// 接收訊息事件
 		/// </summary>
 		/// <param name="args"></param>
-		public void OnApplicationMessageReceived( MqttApplicationMessageReceivedEventArgs args )
+		private void OnApplicationMessageReceived( MqttApplicationMessageReceivedEventArgs args )
 		{
 			ChatRoomPayload chatRoomPayload = JsonConvert.DeserializeObject<ChatRoomPayload>( Encoding.UTF8.GetString( args.ApplicationMessage.Payload ) )!;
 
@@ -147,39 +150,39 @@ namespace MqttBroker.Services
 			}
 		}
 
-		/// <summary>
-		/// 連線事件
-		/// </summary>
-		/// <param name="args"></param>
-		public void OnClientConnected( MqttServerClientConnectedEventArgs args )
+        /// <summary>
+        /// 連線事件
+        /// </summary>
+        /// <param name="args"></param>
+        private void OnClientConnected( MqttServerClientConnectedEventArgs args )
 		{
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' connected." );
 		}
 
-		/// <summary>
-		/// 離線事件
-		/// </summary>
-		/// <param name="args"></param>
-		public void OnClientDisconnected( MqttServerClientDisconnectedEventArgs args )
+        /// <summary>
+        /// 離線事件
+        /// </summary>
+        /// <param name="args"></param>
+        private void OnClientDisconnected( MqttServerClientDisconnectedEventArgs args )
 		{
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' disconnected." );
 		}
 
-		/// <summary>
-		/// 訂閱事件
-		/// </summary>
-		/// <param name="args"></param>
-		public void OnClientSubscribed( MqttServerClientSubscribedTopicEventArgs args )
+        /// <summary>
+        /// 訂閱事件
+        /// </summary>
+        /// <param name="args"></param>
+        private void OnClientSubscribed( MqttServerClientSubscribedTopicEventArgs args )
 		{
 			PublishMessage( "system", args.TopicFilter.Topic, $"'{args.ClientId}' 加入聊天" );
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' subscribed to topic '{args.TopicFilter.Topic}' with QoS {args.TopicFilter.QualityOfServiceLevel}." );
 		}
 
-		/// <summary>
-		/// 取消訂閱事件
-		/// </summary>
-		/// <param name="args"></param>
-		public void OnClientUnsubscribed( MqttServerClientUnsubscribedTopicEventArgs args )
+        /// <summary>
+        /// 取消訂閱事件
+        /// </summary>
+        /// <param name="args"></param>
+        private void OnClientUnsubscribed( MqttServerClientUnsubscribedTopicEventArgs args )
 		{
 			PublishMessage( "system", args.TopicFilter, $"'{args.ClientId}' 已離開房間" );
 			_consoleWithLogHandler.WriteConsoleWithInfoLog( $"Client '{args.ClientId}' unsubscribed from topic '{args.TopicFilter}'" );
