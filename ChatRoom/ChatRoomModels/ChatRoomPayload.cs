@@ -8,6 +8,7 @@ namespace ChatRoomModels
 		/// <summary>
 		/// 客戶端Id (也就是使用者帳號)
 		/// </summary>
+		[Required]
 		public string ClientId { get; set; }
 
 		/// <summary>
