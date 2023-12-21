@@ -13,9 +13,9 @@ namespace ChatRoom
 	public partial class FrmStart : Form
 	{
 		private readonly ILogHandler _logHandler;
+		private readonly IMqttClientService _mqttClientService;
 
-		IMqttClient _mqttClient;
-		IMqttClientService _mqttClientService;
+		private IMqttClient _mqttClient;
 
 		public FrmStart( IMqttClientService mqttClientService,
 						 ILogHandler logHandler )
