@@ -6,8 +6,8 @@ namespace MqttBroker
     public class Application
 	{
 		private readonly IWriteMessageHandler _consoleWithLogHandler;
+		private readonly IMqttServerService _mqttServerService;
 		private static ManualResetEvent _manualResetEvent = new ManualResetEvent( false );
-		IMqttServerService _mqttServerService;
 
 		public Application( IMqttServerService mqttServerService, IWriteMessageHandler consoleWithLogHandler )
 		{
